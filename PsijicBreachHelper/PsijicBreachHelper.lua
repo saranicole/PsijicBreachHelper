@@ -193,7 +193,7 @@ local compassAddCallback = function(pinManager)
    --return if no data for the current map
    if not pins then return end
    for _, pinInfo in ipairs(pins) do
-      CCP.pinManager:CreatePin( COMPASS_PIN_TYPE, "Psijic Breach", pinInfo.x, pinInfo.y )
+      CCP.pinManager:CreatePin( COMPASS_PIN_TYPE, pinInfo, pinInfo.x, pinInfo.y )
    end
 end
 
