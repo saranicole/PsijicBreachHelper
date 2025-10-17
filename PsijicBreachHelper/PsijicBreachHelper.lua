@@ -144,7 +144,7 @@ local pinLayoutData  = {
 
 local pinHighlightLayoutData  = {
    level = 50,
-   texture = "PsijicBreachHelper/Treasure_1-2_highlight.dds",
+   texture = "PsijicBreachHelper/Treasure_1-2_done.dds",
    size = 30,
 }
 
