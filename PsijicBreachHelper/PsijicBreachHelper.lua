@@ -233,11 +233,7 @@ local pinTypeAddCallback = function(pinManager)
    --return if no data for the current map
    if not pins then return end
    for _, pinInfo in ipairs(pins) do
-      if pinInfo.x == PBH.SV.highlightX and pinInfo.y == PBH.SV.highlightY then
-        LMP:CreatePin(PIN_TYPE_HIGHLIGHT, PIN_TYPE_HIGHLIGHT, pinInfo.x, pinInfo.y)
-      else
-        LMP:CreatePin(PIN_TYPE, pinInfo, pinInfo.x, pinInfo.y)
-      end
+      LMP:CreatePin(PIN_TYPE, pinInfo, pinInfo.x, pinInfo.y)
    end
 end
 
@@ -276,7 +272,7 @@ local pinHighlightTypeOnResizeCallback = function(pinManager, mapWidth, mapHeigh
    local currentZoom = mapWidth / visibleWidth
 
    if currentZoom < 1.5 then
-      LMP:SetLayoutData(pinTypeId2, pinLayoutData)
+      LMP:SetLayoutData(pinTypeId2, pinHighlightLayoutData)
       LMP:RefreshPins(pinTypeId2)
    else
       LMP:SetLayoutData(pinTypeId2, {})
