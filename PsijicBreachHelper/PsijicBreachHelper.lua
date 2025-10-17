@@ -234,7 +234,7 @@ local pinTypeAddCallback = function(pinManager)
    if not pins then return end
    for _, pinInfo in ipairs(pins) do
       if pinInfo.x == PBH.SV.highlightX and pinInfo.y == PBH.SV.highlightY then
-        LMP:CreatePin(PIN_TYPE_HIGHLIGHT, pinInfo, pinInfo.x, pinInfo.y)
+        LMP:CreatePin(PIN_TYPE_HIGHLIGHT, PIN_TYPE_HIGHLIGHT, pinInfo.x, pinInfo.y)
       else
         LMP:CreatePin(PIN_TYPE, pinInfo, pinInfo.x, pinInfo.y)
       end
@@ -263,11 +263,24 @@ local pinTypeOnResizeCallback = function(pinManager, mapWidth, mapHeight)
    local currentZoom = mapWidth / visibleWidth
 
    if currentZoom < 1.5 then
-      LMP:SetLayoutData(pinType1, pinLayoutData)
-      LMP:RefreshPins(pinType1)
+      LMP:SetLayoutData(pinTypeId1, pinLayoutData)
+      LMP:RefreshPins(pinTypeId1)
    else
-      LMP:SetLayoutData(pinType1, {})
-      LMP:RefreshPins(pinType1)
+      LMP:SetLayoutData(pinTypeId1, {})
+      LMP:RefreshPins(pinTypeId1)
+   end
+end
+
+local pinHighlightTypeOnResizeCallback = function(pinManager, mapWidth, mapHeight)
+   local visibleWidth, visibleHeight = ZO_WorldMapScroll:GetDimensions()
+   local currentZoom = mapWidth / visibleWidth
+
+   if currentZoom < 1.5 then
+      LMP:SetLayoutData(pinTypeId2, pinLayoutData)
+      LMP:RefreshPins(pinTypeId2)
+   else
+      LMP:SetLayoutData(pinTypeId2, {})
+      LMP:RefreshPins(pinTypeId2)
    end
 end
 
@@ -276,7 +289,7 @@ local function OnAddOnLoaded(eventCode, addonName)
   if addonName ~= PBH.Name then return end
 	EVENT_MANAGER:UnregisterForEvent(PBH.Name, EVENT_ADD_ON_LOADED)
 	pinTypeId1 = LMP:AddPinType(PIN_TYPE, pinTypeAddCallback, pinTypeOnResizeCallback, pinLayoutData, pinTooltipCreator)
-	pinTypeId2 = LMP:AddPinType(PIN_TYPE_HIGHLIGHT, pinTypeAddCallback, pinTypeOnResizeCallback, pinHighlightLayoutData, pinTooltipCreator)
+	pinTypeId2 = LMP:AddPinType(PIN_TYPE_HIGHLIGHT, pinTypeAddCallback, pinHighlightTypeOnResizeCallback, pinHighlightLayoutData, pinTooltipCreator)
 	CCP:AddCustomPin( COMPASS_PIN_TYPE, compassAddCallback, compassLayoutData )
 	CCP:AddCustomPin( COMPASS_PIN_TYPE_HIGHLIGHT, compassAddCallback, compassHighlightLayoutData )
 	CCP:SetCompassPinEnabled(COMPASS_PIN_TYPE, true)
@@ -288,9 +301,9 @@ local function OnAddOnLoaded(eventCode, addonName)
 	LMP:SetClickHandlers(PIN_TYPE_HIGHLIGHT, clickHandler)
 	LMP:SetEnabled(PIN_TYPE)
 	LMP:SetEnabled(PIN_TYPE_HIGHLIGHT)
-	LMP:SetPinFilterHidden(pinType1, "pvp", true)
-  LMP:SetPinFilterHidden(pinType1, "imperialPvP", true)
-  LMP:SetPinFilterHidden(pinType1, "battleground", true)
+	LMP:SetPinFilterHidden(pinTypeId1, "pvp", true)
+  LMP:SetPinFilterHidden(pinTypeId1, "imperialPvP", true)
+  LMP:SetPinFilterHidden(pinTypeId1, "battleground", true)
   LMP:RefreshPins(PIN_TYPE)
   LMP:RefreshPins(PIN_TYPE_HIGHLIGHT)
 end
