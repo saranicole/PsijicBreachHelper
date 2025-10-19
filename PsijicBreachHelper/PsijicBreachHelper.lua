@@ -137,13 +137,13 @@ local COMPASS_PIN_TYPE_HIGHLIGHT = "PsijicBreachCompassPinHighlight"
 local pinTypeId1, pinTypeId2
 
 local pinLayoutData  = {
-   level = 50,
+   level = 80,
    texture = "PsijicBreachHelper/Treasure_1-2.dds",
    size = 30,
 }
 
 local pinHighlightLayoutData  = {
-   level = 50,
+   level = 80,
    texture = "PsijicBreachHelper/Treasure_1-2_done.dds",
    size = 30,
 }
