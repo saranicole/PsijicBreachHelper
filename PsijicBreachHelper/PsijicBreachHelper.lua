@@ -136,6 +136,12 @@ local COMPASS_PIN_TYPE = "PsijicBreachCompassPin"
 local COMPASS_PIN_TYPE_HIGHLIGHT = "PsijicBreachCompassPinHighlight"
 local pinTypeId1, pinTypeId2
 
+function equalish(a, b, epsilon)
+    -- Default epsilon if none provided
+    epsilon = epsilon or 1e-9
+    return math.abs(a - b) < epsilon
+end
+
 local pinLayoutData  = {
    level = 80,
    texture = "PsijicBreachHelper/Treasure_1-2.dds",
@@ -157,7 +163,7 @@ local clickHandler = {
         PingMap(MAP_PIN_TYPE_PLAYER_WAYPOINT, MAP_TYPE_LOCATION_CENTERED, pin.normalizedX, pin.normalizedY)
         local icon = pin.backgroundControl
 
-        if pin.normalizedX == PBH.SV.highlightX and pin.normalizedY == PBH.SV.highlightY then
+        if equalish(pin.normalizedX,PBH.SV.highlightX) and equalish(pin.normalizedY,PBH.SV.highlightY) then
           PBH.SV.highlightX = nil
           PBH.SV.highlightY = nil
           icon:SetTexture("PsijicBreachHelper/Treasure_1-2.dds")
@@ -177,7 +183,7 @@ local clickHandler = {
         PingMap(MAP_PIN_TYPE_PLAYER_WAYPOINT, MAP_TYPE_LOCATION_CENTERED, pin.normalizedX, pin.normalizedY)
         local icon = pin.backgroundControl
 
-        if pin.normalizedX == PBH.SV.highlightX and pin.normalizedY == PBH.SV.highlightY then
+        if equalish(pin.normalizedX,PBH.SV.highlightX) and equalish(pin.normalizedY,PBH.SV.highlightY) then
           PBH.SV.highlightX = nil
           PBH.SV.highlightY = nil
           icon:SetTexture("PsijicBreachHelper/Treasure_1-2.dds")
@@ -233,7 +239,7 @@ local pinTypeAddCallback = function(pinManager)
    --return if no data for the current map
    if not pins then return end
    for _, pinInfo in ipairs(pins) do
-      if pinInfo.x == PBH.SV.highlightX and pinInfo.y == PBH.SV.highlightY then
+      if equalish(pin.normalizedX,PBH.SV.highlightX) and equalish(pin.normalizedY,PBH.SV.highlightY) then
         LMP:CreatePin(PIN_TYPE, pinInfo, pinInfo.x, pinInfo.y)
         local pin = LMP:FindCustomPin(PIN_TYPE, pinInfo)
         pin.backgroundControl:SetTexture("PsijicBreachHelper/Treasure_1-2_done.dds")
@@ -253,17 +259,7 @@ local compassAddCallback = function(pinManager)
    --return if no data for the current map
    if not pins then return end
    for _, pinInfo in ipairs(pins) do
-      if GetDisplayName() == "@Saranicole1980" then
-        d("x")
-        d(pinInfo.x)
-        d("y")
-        d(pinInfo.y)
-        d("x compare")
-        d(pinInfo.x == PBH.SV.highlightX)
-        d("y compare")
-        d(pinInfo.y == PBH.SV.highlightY)
-      end
-      if pinInfo.x == PBH.SV.highlightX and pinInfo.y == PBH.SV.highlightY then
+      if equalish(pin.normalizedX,PBH.SV.highlightX) and equalish(pin.normalizedY,PBH.SV.highlightY) then
         CCP.pinManager:CreatePin( COMPASS_PIN_TYPE_HIGHLIGHT, pinInfo, pinInfo.x, pinInfo.y )
       else
         CCP.pinManager:CreatePin( COMPASS_PIN_TYPE, pinInfo, pinInfo.x, pinInfo.y )
