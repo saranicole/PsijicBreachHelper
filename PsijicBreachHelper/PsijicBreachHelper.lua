@@ -253,6 +253,16 @@ local compassAddCallback = function(pinManager)
    --return if no data for the current map
    if not pins then return end
    for _, pinInfo in ipairs(pins) do
+      if GetDisplayName() == "@Saranicole1980" then
+        d("x")
+        d(pinInfo.x)
+        d("y")
+        d(pinInfo.y)
+        d("x compare")
+        d(pinInfo.x == PBH.SV.highlightX)
+        d("y compare")
+        d(pinInfo.y == PBH.SV.highlightY)
+      end
       if pinInfo.x == PBH.SV.highlightX and pinInfo.y == PBH.SV.highlightY then
         CCP.pinManager:CreatePin( COMPASS_PIN_TYPE_HIGHLIGHT, pinInfo, pinInfo.x, pinInfo.y )
       else
