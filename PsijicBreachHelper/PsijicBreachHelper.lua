@@ -136,10 +136,14 @@ local COMPASS_PIN_TYPE = "PsijicBreachCompassPin"
 local COMPASS_PIN_TYPE_HIGHLIGHT = "PsijicBreachCompassPinHighlight"
 local pinTypeId1, pinTypeId2
 
-function equalish(a, b, epsilon)
+local function equalish(a, b, epsilon)
     -- Default epsilon if none provided
     epsilon = epsilon or 1e-9
-    return math.abs(a - b) < epsilon
+    if a and b then
+      return math.abs(a - b) < epsilon
+    else
+      return false
+    end
 end
 
 local pinLayoutData  = {
@@ -259,7 +263,7 @@ local compassAddCallback = function(pinManager)
    --return if no data for the current map
    if not pins then return end
    for _, pinInfo in ipairs(pins) do
-      if equalish(pin.normalizedX,PBH.SV.highlightX) and equalish(pin.normalizedY,PBH.SV.highlightY) then
+      if equalish(pinInfo.x,PBH.SV.highlightX) and equalish(pinInfo.y,PBH.SV.highlightY) then
         CCP.pinManager:CreatePin( COMPASS_PIN_TYPE_HIGHLIGHT, pinInfo, pinInfo.x, pinInfo.y )
       else
         CCP.pinManager:CreatePin( COMPASS_PIN_TYPE, pinInfo, pinInfo.x, pinInfo.y )
