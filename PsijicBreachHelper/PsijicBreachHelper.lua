@@ -239,7 +239,7 @@ local pinTypeAddCallback = function(pinManager)
    --return if no data for the current map
    if not pins then return end
    for _, pinInfo in ipairs(pins) do
-      if equalish(pin.normalizedX,PBH.SV.highlightX) and equalish(pin.normalizedY,PBH.SV.highlightY) then
+      if equalish(pinInfo.x,PBH.SV.highlightX) and equalish(pinInfo.y,PBH.SV.highlightY) then
         LMP:CreatePin(PIN_TYPE, pinInfo, pinInfo.x, pinInfo.y)
         local pin = LMP:FindCustomPin(PIN_TYPE, pinInfo)
         pin.backgroundControl:SetTexture("PsijicBreachHelper/Treasure_1-2_done.dds")
