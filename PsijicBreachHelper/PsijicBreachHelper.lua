@@ -131,10 +131,9 @@ PBH.CV = ZO_SavedVars:NewCharacterIdSettings("PsijicBreachHelper_Vars", 1, nil, 
 PBH.SwitchSV()
 
 local PIN_TYPE = "PsijicBreachPin"
-local PIN_TYPE_HIGHLIGHT = "PsijicBreachPinHighlight"
 local COMPASS_PIN_TYPE = "PsijicBreachCompassPin"
 local COMPASS_PIN_TYPE_HIGHLIGHT = "PsijicBreachCompassPinHighlight"
-local pinTypeId1, pinTypeId2
+local pinTypeId1
 
 local function equalish(a, b, epsilon)
     -- Default epsilon if none provided
@@ -146,15 +145,19 @@ local function equalish(a, b, epsilon)
     end
 end
 
+local function differ(a, b, epsilon)
+    -- Default epsilon if none provided
+    epsilon = epsilon or 1e-9
+    if a and b then
+      return math.abs(a - b) > epsilon
+    else
+      return true
+    end
+end
+
 local pinLayoutData  = {
    level = 80,
    texture = "PsijicBreachHelper/Treasure_1-2.dds",
-   size = 30,
-}
-
-local pinHighlightLayoutData  = {
-   level = 80,
-   texture = "PsijicBreachHelper/Treasure_1-2_done.dds",
    size = 30,
 }
 
@@ -171,33 +174,22 @@ local clickHandler = {
           PBH.SV.highlightX = nil
           PBH.SV.highlightY = nil
           icon:SetTexture("PsijicBreachHelper/Treasure_1-2.dds")
-        else
+        elseif PBH.SV.highlightX ~= nil and PBH.SV.highlightY ~= nil and differ(pin.normalizedX,PBH.SV.highlightX) and differ(pin.normalizedY,PBH.SV.highlightY) then
+          if PBH.SV.highlightedPin then
+            PBH.SV.highlightedPin.backgroundControl:SetTexture("PsijicBreachHelper/Treasure_1-2.dds")
+          end
+          PBH.SV.highlightedPin = pin
           PBH.SV.highlightX = pin.normalizedX
           PBH.SV.highlightY = pin.normalizedY
           icon:SetTexture("PsijicBreachHelper/Treasure_1-2_done.dds")
-        end
-        CCP:RefreshPins(COMPASS_PIN_TYPE_HIGHLIGHT)
-      end,
-    },
-    [2] = {
-      name = "Psijic Breach",
-      gamepadName = "Psijic Breach",
-      show = function(pin) return true end,
-      callback = function(pin)
-        PingMap(MAP_PIN_TYPE_PLAYER_WAYPOINT, MAP_TYPE_LOCATION_CENTERED, pin.normalizedX, pin.normalizedY)
-        local icon = pin.backgroundControl
-
-        if equalish(pin.normalizedX,PBH.SV.highlightX) and equalish(pin.normalizedY,PBH.SV.highlightY) then
-          PBH.SV.highlightX = nil
-          PBH.SV.highlightY = nil
-          icon:SetTexture("PsijicBreachHelper/Treasure_1-2.dds")
         else
           PBH.SV.highlightX = pin.normalizedX
           PBH.SV.highlightY = pin.normalizedY
+          PBH.SV.highlightedPin = pin
           icon:SetTexture("PsijicBreachHelper/Treasure_1-2_done.dds")
         end
         CCP:RefreshPins(COMPASS_PIN_TYPE_HIGHLIGHT)
-      end,
+      end
     }
   }
 
@@ -284,25 +276,11 @@ local pinTypeOnResizeCallback = function(pinManager, mapWidth, mapHeight)
    end
 end
 
-local pinHighlightTypeOnResizeCallback = function(pinManager, mapWidth, mapHeight)
-   local visibleWidth, visibleHeight = ZO_WorldMapScroll:GetDimensions()
-   local currentZoom = mapWidth / visibleWidth
-
-   if currentZoom < 1.5 then
-      LMP:SetLayoutData(pinTypeId2, pinHighlightLayoutData)
-      LMP:RefreshPins(pinTypeId2)
-   else
-      LMP:SetLayoutData(pinTypeId2, {})
-      LMP:RefreshPins(pinTypeId2)
-   end
-end
-
 --When Loaded
 local function OnAddOnLoaded(eventCode, addonName)
   if addonName ~= PBH.Name then return end
 	EVENT_MANAGER:UnregisterForEvent(PBH.Name, EVENT_ADD_ON_LOADED)
 	pinTypeId1 = LMP:AddPinType(PIN_TYPE, pinTypeAddCallback, pinTypeOnResizeCallback, pinLayoutData, pinTooltipCreator)
-	pinTypeId2 = LMP:AddPinType(PIN_TYPE_HIGHLIGHT, pinTypeAddCallback, pinHighlightTypeOnResizeCallback, pinHighlightLayoutData, pinTooltipCreator)
 	CCP:AddCustomPin( COMPASS_PIN_TYPE, compassAddCallback, compassLayoutData )
 	CCP:AddCustomPin( COMPASS_PIN_TYPE_HIGHLIGHT, compassAddCallback, compassHighlightLayoutData )
 	CCP:SetCompassPinEnabled(COMPASS_PIN_TYPE, true)
@@ -311,14 +289,11 @@ local function OnAddOnLoaded(eventCode, addonName)
   CCP:RefreshPins(COMPASS_PIN_TYPE_HIGHLIGHT)
 	LMP:AddPinFilter(pinTypeId1, "Psijic Breaches", nil, PBH.SV, "filters")
 	LMP:SetClickHandlers(PIN_TYPE, clickHandler)
-	LMP:SetClickHandlers(PIN_TYPE_HIGHLIGHT, clickHandler)
-	LMP:SetEnabled(PIN_TYPE)
-	LMP:SetEnabled(PIN_TYPE_HIGHLIGHT)
+	LMP:SetEnabled(PIN_TYPE, true)
 	LMP:SetPinFilterHidden(pinTypeId1, "pvp", true)
   LMP:SetPinFilterHidden(pinTypeId1, "imperialPvP", true)
   LMP:SetPinFilterHidden(pinTypeId1, "battleground", true)
   LMP:RefreshPins(PIN_TYPE)
-  LMP:RefreshPins(PIN_TYPE_HIGHLIGHT)
 end
 
 EVENT_MANAGER:RegisterForEvent(PBH.Name, EVENT_ADD_ON_LOADED, OnAddOnLoaded)
