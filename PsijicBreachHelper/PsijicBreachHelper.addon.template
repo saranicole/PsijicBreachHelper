@@ -6,8 +6,8 @@
 
 ## Title: PsijicBreachHelper
 ## Author: @thisbeaurielle
-## Version: 0.1.5
-## APIVersion: 101047 101048
+## Version: ${ADDON_VERSION}
+## APIVersion: 101048 101049
 ## AddOnVersion: 1
 ## DependsOn: LibMapPins-1.0>=10047, CustomCompassPins>=137
 ## SavedVariables: PsijicBreachHelper_Vars
