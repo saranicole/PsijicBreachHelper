@@ -36,7 +36,8 @@ jobs:
           echo "ZIP_FULL_NAME=${addon_name}-${version}.zip" >> $GITHUB_ENV
       - name: Create addon file
         run: |
-          cat ${{ env.REPO_NAME }}/${{ env.REPO_NAME }}.addon.template | envsubst > ${{ env.REPO_NAME }}/${{ env.REPO_NAME }}.addon
+          cat ${{ github.workspace }}/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}.addon.template | envsubst > ${{ github.workspace }}/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}.addon
+          cat ${{ github.workspace }}/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}.addon
       - name: Create ZIP archive
         run: |
           REPO_FOLDER=${{ github.workspace }}
@@ -51,9 +52,10 @@ jobs:
           # Make folder and copy content
           mkdir -p $TMP_FOLDER
           rsync -a --quiet $exclude_patterns "$REPO_FOLDER/" "$TMP_FOLDER/"
+          ls -la $TMP_FOLDER
 
           # create zip
-          (cd /tmp && zip -r --quiet "$REPO_FOLDER/${{ env.ZIP_FULL_NAME }}" "${{ env.ADDON_NAME }}")
+          (cd /tmp && zip -r "$REPO_FOLDER/${{ env.ZIP_FULL_NAME }}" "${{ env.ADDON_NAME }}")
 
       - name: Extract latest changelog entry
         run: |
