@@ -21,6 +21,7 @@ jobs:
           branch: main
           noVersionBumpBehavior: warn
           skipInvalidTags: true
+          patchList: fix
 
       - name: get repo name
         run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
@@ -40,7 +41,7 @@ jobs:
           cat ${{ github.workspace }}/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}.addon
       - name: Create ZIP archive
         run: |
-          REPO_FOLDER=${{ github.workspace }}
+          REPO_FOLDER=${{ github.workspace }}/${{ env.ADDON_NAME }}
           TMP_FOLDER="/tmp/${{ env.ADDON_NAME }}"
 
           # Define the path to the ignore pattern file
@@ -82,5 +83,5 @@ jobs:
           BNET_PASSWORD: ${{ secrets.BNET_PASSWORD }}
           addon_id: ${{ vars.ADDON_ID }}
           version: ${{ env.ADDON_VERSION }}
-          zip_file: "${{ github.workspace }}/${{ env.ZIP_FULL_NAME }}"
+          zip_file: "${{ github.workspace }}/${{ env.ADDON_NAME }}/${{ env.ZIP_FULL_NAME }}"
           release_notes_file: latest_changes.md
