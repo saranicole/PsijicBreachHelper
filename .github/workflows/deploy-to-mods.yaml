@@ -78,7 +78,7 @@ jobs:
         with:
           BNET_USERNAME: ${{ secrets.BNET_USERNAME }}
           BNET_PASSWORD: ${{ secrets.BNET_PASSWORD }}
-          addon_id: ${{ env.ADDON_ID }}
+          addon_id: ${{ vars.ADDON_ID }}
           version: ${{ env.ADDON_VERSION }}
           zip_file: "${{ env.ZIP_FULL_NAME }}"
           release_notes_file: latest_changes.md
