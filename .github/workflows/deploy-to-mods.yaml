@@ -39,7 +39,7 @@ jobs:
           cat ${{ env.REPO_NAME }}/${{ env.REPO_NAME }}.addon.template | envsubst > ${{ env.REPO_NAME }}/${{ env.REPO_NAME }}.addon
       - name: Create ZIP archive
         run: |
-          REPO_FOLDER=${{ github.workspace }}/${{ env.ADDON_NAME }}
+          REPO_FOLDER=${{ github.workspace }}
           TMP_FOLDER="/tmp/${{ env.ADDON_NAME }}"
 
           # Define the path to the ignore pattern file
@@ -80,5 +80,5 @@ jobs:
           BNET_PASSWORD: ${{ secrets.BNET_PASSWORD }}
           addon_id: ${{ vars.ADDON_ID }}
           version: ${{ env.ADDON_VERSION }}
-          zip_file: "${{ env.ZIP_FULL_NAME }}"
+          zip_file: "${{ github.workspace }}/${{ env.ZIP_FULL_NAME }}"
           release_notes_file: latest_changes.md
