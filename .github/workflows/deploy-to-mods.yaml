@@ -1,4 +1,4 @@
-name:  Deploy to Console
+name:  Deploy Addon
 
 on:
 
@@ -59,25 +59,25 @@ jobs:
           awk '/^## / { if (!found) { found=1; print; next } else { exit } } found' CHANGELOG.md > latest_changes.md
           cat latest_changes.md
 
-#      - name: Create GitHub Release
-#        #id: create_release
-#        uses: ncipollo/release-action@v1
-#        with:
-#          name: "${{ env.ADDON_VERSION }}"
-#          commit: ${{ github.ref }}
-#          tag: "${{ env.ADDON_VERSION }}"
-#          artifacts: "${{ env.ZIP_FULL_NAME }}"
-#          artifactContentType: application/zip
-#          bodyFile: latest_changes.md
-#          allowUpdates: true
-#          makeLatest: true
-#
-#      - name: Upload to BNET
-#        uses: m00nyONE/bnet-upload@main
-#        with:
-#          BNET_USERNAME: ${{ secrets.BNET_USERNAME }}
-#          BNET_PASSWORD: ${{ secrets.BNET_PASSWORD }}
-#          addon_id: ${{ env.ADDON_ID }}
-#          version: ${{ env.ADDON_VERSION }}
-#          zip_file: "${{ env.ZIP_FULL_NAME }}"
-#          release_notes_file: latest_changes.md
+      - name: Create GitHub Release
+        #id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          name: "${{ env.ADDON_VERSION }}"
+          commit: ${{ github.ref }}
+          tag: "${{ env.ADDON_VERSION }}"
+          artifacts: "${{ env.ZIP_FULL_NAME }}"
+          artifactContentType: application/zip
+          bodyFile: latest_changes.md
+          allowUpdates: true
+          makeLatest: true
+
+      - name: Upload to BNET
+        uses: m00nyONE/bnet-upload@main
+        with:
+          BNET_USERNAME: ${{ secrets.BNET_USERNAME }}
+          BNET_PASSWORD: ${{ secrets.BNET_PASSWORD }}
+          addon_id: ${{ env.ADDON_ID }}
+          version: ${{ env.ADDON_VERSION }}
+          zip_file: "${{ env.ZIP_FULL_NAME }}"
+          release_notes_file: latest_changes.md
